@@ -7,4 +7,5 @@ then
 fi
 
 # Create backup directories
-mkdir -p /data/database/postgres/bp 
+mkdir -p /data/database/postgres/bp
+mkdir -p /data/database/grafana

@@ -16,6 +16,7 @@ services:
      memory: 512M
    restart_policy:
      condition: on-failure
+  restart: "on-failure"
   ulimits:
    nproc: 65535
    nofile:
@@ -52,6 +53,7 @@ services:
      memory: 512M
    restart_policy:
      condition: on-failure
+  restart: "on-failure"
   volumes:
    - /etc/localtime:/etc/localtime:ro
    - /etc/timezone:/etc/timezone:ro
@@ -85,6 +87,7 @@ services:
   deploy:
    restart_policy:
      condition: on-failure
+  restart: "on-failure"
   env_file:
    - .env_agent
   user: root
@@ -109,6 +112,7 @@ services:
   deploy:
    restart_policy:
      condition: on-failure
+  restart: "on-failure"
   env_file:
    - .env_java
   user: root
@@ -130,6 +134,7 @@ services:
   deploy:
    restart_policy:
      condition: on-failure
+  restart: "on-failure"
   user: root
   networks:
    zbx_net:
@@ -148,6 +153,7 @@ services:
   deploy:
    restart_policy:
      condition: on-failure
+  restart: "on-failure"
   env_file:
    - .env_db_pgsql
   user: root
@@ -157,6 +163,21 @@ services:
      - postgres-server
      - pgsql-server
      - pgsql-database
+
+ grafana:
+  image: grafana/grafana:latest
+  ports:
+    - "3000:3000"
+  volumes:
+    - /data/database/grafana:/var/lib/grafana
+  deploy:
+   restart_policy:
+     condition: on-failure
+  restart: "on-failure"
+  env_file:
+    - .env_grafana
+  networks:
+   zbx_net:
 
 networks:
   zbx_net:
