@@ -143,6 +143,8 @@ services:
 
  postgres-server:
   image: postgres:latest
+  volumes:
+    - /data/database/postgres/bp:/var/lib/postgresql/data
   deploy:
    restart_policy:
      condition: on-failure
