@@ -15,8 +15,8 @@ services:
     limits:
      memory: 512M
    restart_policy:
-     condition: on-failure
-  restart: "on-failure"
+     condition: always
+  restart: "always"
   ulimits:
    nproc: 65535
    nofile:
@@ -52,8 +52,8 @@ services:
     limits:
      memory: 512M
    restart_policy:
-     condition: on-failure
-  restart: "on-failure"
+     condition: always
+  restart: "always"
   volumes:
    - /etc/localtime:/etc/localtime:ro
    - /etc/timezone:/etc/timezone:ro
@@ -86,8 +86,8 @@ services:
    - zabbix-server
   deploy:
    restart_policy:
-     condition: on-failure
-  restart: "on-failure"
+     condition: always
+  restart: "always"
   env_file:
    - .env_agent
   user: root
@@ -111,8 +111,8 @@ services:
    - "10052:10052"
   deploy:
    restart_policy:
-     condition: on-failure
-  restart: "on-failure"
+     condition: always
+  restart: "always"
   env_file:
    - .env_java
   user: root
@@ -133,8 +133,8 @@ services:
    - "162:162/udp"
   deploy:
    restart_policy:
-     condition: on-failure
-  restart: "on-failure"
+     condition: always
+  restart: "always"
   user: root
   networks:
    zbx_net:
@@ -152,8 +152,8 @@ services:
     - /data/database/postgres/bp:/var/lib/postgresql/data
   deploy:
    restart_policy:
-     condition: on-failure
-  restart: "on-failure"
+     condition: always
+  restart: "always"
   env_file:
    - .env_db_pgsql
   user: root
@@ -172,8 +172,8 @@ services:
     - /data/database/grafana:/var/lib/grafana
   deploy:
    restart_policy:
-     condition: on-failure
-  restart: "on-failure"
+     condition: always
+  restart: "always"
   env_file:
     - .env_grafana
   networks:
