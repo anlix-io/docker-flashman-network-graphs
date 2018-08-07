@@ -9,11 +9,8 @@ services:
    - /etc/timezone:/etc/timezone:ro 
   depends_on:
    - postgres-server
-   - zabbix-java-gateway
+#   - zabbix-java-gateway
   deploy:
-   resources:
-    limits:
-     memory: 512M
    restart_policy:
      condition: always
   restart: "always"
@@ -75,87 +72,59 @@ services:
    com.zabbix.dbtype: "pgsql"
    com.zabbix.os: "alpine"
 
- zabbix-agent:
-  image: zabbix/zabbix-agent:alpine-3.4-latest
-  ports:
-   - "10050:10050"
-  volumes:
-   - /etc/localtime:/etc/localtime:ro
-   - /etc/timezone:/etc/timezone:ro
-  depends_on:
-   - zabbix-server
-  deploy:
-   restart_policy:
-     condition: always
-  restart: "always"
-  env_file:
-   - .env_agent
-  user: root
-  privileged: true
-  pid: "host"
-  networks:
-   zbx_net:
-    aliases:
-     - zabbix-agent
-     - zabbix-agent-passive
-     - zabbix-agent-alpine
-  labels:
-   com.zabbix.description: "Zabbix agent"
-   com.zabbix.company: "Zabbix SIA"
-   com.zabbix.component: "zabbix-agentd"
-   com.zabbix.os: "alpine"
+# zabbix-java-gateway:
+#  image: zabbix/zabbix-java-gateway:alpine-3.4-latest
+#  ports:
+#   - "10052:10052"
+#  deploy:
+#   restart_policy:
+#     condition: always
+#  restart: "always"
+#  env_file:
+#   - .env_java
+#  user: root
+#  networks:
+#   zbx_net:
+#    aliases:
+#     - zabbix-java-gateway
+#     - zabbix-java-gateway-alpine
+#  labels:
+#   com.zabbix.description: "Zabbix Java Gateway"
+#   com.zabbix.company: "Zabbix SIA"
+#   com.zabbix.component: "java-gateway"
+#   com.zabbix.os: "alpine"
 
- zabbix-java-gateway:
-  image: zabbix/zabbix-java-gateway:alpine-3.4-latest
-  ports:
-   - "10052:10052"
-  deploy:
-   restart_policy:
-     condition: always
-  restart: "always"
-  env_file:
-   - .env_java
-  user: root
-  networks:
-   zbx_net:
-    aliases:
-     - zabbix-java-gateway
-     - zabbix-java-gateway-alpine
-  labels:
-   com.zabbix.description: "Zabbix Java Gateway"
-   com.zabbix.company: "Zabbix SIA"
-   com.zabbix.component: "java-gateway"
-   com.zabbix.os: "alpine"
-
- zabbix-snmptraps:
-  image: zabbix/zabbix-snmptraps:ubuntu-3.4-latest
-  ports:
-   - "162:162/udp"
-  deploy:
-   restart_policy:
-     condition: always
-  restart: "always"
-  user: root
-  networks:
-   zbx_net:
-    aliases:
-     - zabbix-snmptraps
-  labels:
-   com.zabbix.description: "Zabbix snmptraps"
-   com.zabbix.company: "Zabbix SIA"
-   com.zabbix.component: "snmptraps"
-   com.zabbix.os: "ubuntu"
+# zabbix-snmptraps:
+#  image: zabbix/zabbix-snmptraps:ubuntu-3.4-latest
+#  ports:
+#   - "162:162/udp"
+#  deploy:
+#   restart_policy:
+#     condition: always
+#  restart: "always"
+#  user: root
+#  networks:
+#   zbx_net:
+#    aliases:
+#     - zabbix-snmptraps
+#  labels:
+#   com.zabbix.description: "Zabbix snmptraps"
+#   com.zabbix.company: "Zabbix SIA"
+#   com.zabbix.component: "snmptraps"
+#   com.zabbix.os: "ubuntu"
 
  postgres-server:
   image: postgres:latest
   volumes:
     - /data/database/postgres/bp:/var/lib/postgresql/data
+    - ./postgres.conf:/etc/postgresql/postgresql.conf
   deploy:
    restart_policy:
      condition: always
   restart: "always"
   env_file:
    - .env_db_pgsql
+  command: postgres -c config_file=/etc/postgresql/postgresql.conf
   user: root
   networks:
    zbx_net:
